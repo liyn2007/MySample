@@ -26,3 +26,5 @@ resource('users','UsersController');
 get('login','SessionController@create')->name('login');
 post('login','SessionController@store')->name('login');
 delete('logout','SessionController@destory')->name('logout');
+
+get('/users/{id}/edit','UsersController@edit')->name('users.edit');
