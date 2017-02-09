@@ -30,3 +30,8 @@ delete('logout','SessionController@destory')->name('logout');
 get('/users/{id}/edit','UsersController@edit')->name('users.edit');
 
 get('/signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+
+get('password/email', 'Auth\PasswordController@getEmail')->name('password.reset');
+post('password/email', 'Auth\PasswordController@postEmail')->name('password.reset');
+get('password/reset/{token}', 'Auth\PasswordController@getReset')->name('password.edit');
+post('password/reset', 'Auth\PasswordController@postReset')->name('password.update');
