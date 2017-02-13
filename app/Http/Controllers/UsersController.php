@@ -33,7 +33,10 @@ class UsersController extends Controller
     public function show($id)
     {
         $user = User::findorFail($id);
-        return view('users.show', compact('user'));
+        $statuses = $user->statuses()
+                        ->orderBy('created_at','desc')
+                        ->paginate(10);
+        return view('users.show', compact('user','statuses'));
     }
 
     public function store(Request $request)
@@ -49,7 +52,7 @@ class UsersController extends Controller
         $user = User::create([
             'name'=>$request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => bcrypt($request->password),
         ]);
 
         $this->sendEmailConfirmationTo($user);
@@ -75,10 +78,11 @@ class UsersController extends Controller
         $user = User::findorFail($id);
         $this->authorize('update', $user);
 
-        $data = array_filter([
-            'name' => $request->name,
-            'password' => $request->password,
-        ]);
+        $data = [];
+        $data['name'] = $request->name;
+        if($request->password){
+            $data['password'] = bcrypt($request->password);
+        }
         $user->update($data);
 
         session()->flash('success','个人资料更新成功！');
@@ -102,7 +106,7 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::findorFail($id);
-        $this->authorize('destroy', $user); //加载UserPolicy的destory
+        $this->authorize('destroy', $user); //加载UserPolicy的destroy
         $user->delete();
         session()->flash('success', '成功删除用户！');
         return back();

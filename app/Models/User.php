@@ -43,10 +43,10 @@ class User extends Model implements AuthenticatableContract,
         return "http://www.gravatar.com/avatar/$hash?s=$size";
     }
 
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = bcrypt($password);
-    }
+    // public function setPasswordAttribute($password)
+    // {
+    //     $this->attributes['password'] = bcrypt($password);
+    // }
 
     /**
      * boot方法会在用户模型类完成初始化之后进行加载
@@ -58,5 +58,21 @@ class User extends Model implements AuthenticatableContract,
         static::creating(function($user){
             $user->activation_token = str_random(30);
         });
+    }
+
+    /**
+     * 指明一对多关系
+     */
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
+
+    /**
+     * 获取用户微博信息
+     */
+    public function feed()
+    {
+        return $this->statuses()->orderBy('created_at', 'desc');
     }
 }
