@@ -1,5 +1,5 @@
 <li>
-  <img src="http://wx.qlogo.cn/mmopen/sGyfZt1iauRSxuJhpZGcHtqqCE31nWiafzkRvPzTfCcpWKjct0KT8ty3WLcO4Taia8TXibSK1KXR8QmOIssO37cu1POx3YZuFaiaQ/0" alt="{{ $user->name }}" class="gravatar"/>
+  <img src="{{ $user->gravatar() }}" alt="{{ $user->name }}" class="gravatar"/>
   <a href="{{ route('users.show', $user->id )}}" class="username">{{ $user->name }}</a>
 
   @can('destroy', $user)
